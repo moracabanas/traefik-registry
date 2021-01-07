@@ -36,8 +36,8 @@ services:
         - traefik.http.routers.${REGISTRY_NAME?variable not set}_registry-https.tls.certresolver=le
         - traefik.http.services.${REGISTRY_NAME?variable not set}_registry.loadbalancer.server.port=5000
         - traefik.http.middlewares.${REGISTRY_NAME?variable not set}_registry-auth.basicauth.usersfile=/run/secrets/USERS
-        #- traefik.http.routers.${REGISTRY_NAME?variable not set}_registry-https.middlewares=${REGISTRY_NAME?variable not set}_registry-auth
-  
+        - traefik.http.routers.${REGISTRY_NAME?variable not set}_registry-https.middlewares=${REGISTRY_NAME?variable not set}_registry-auth
+        # https://stackoverflow.com/questions/49454278/how-to-use-a-private-registry-with-docker-swarm-and-traefik-in-docker
   ui:
     image: jc21/registry-ui
     depends_on: 
@@ -46,10 +46,10 @@ services:
       - net
       - traefik-public
     environment: 
-      REGISTRY_HOST: "${DOMAIN?variable not set}"
+      REGISTRY_HOST: registry:5000
       REGISTRY_DOMAIN: ${DOMAIN?variable not set}
-      #REGISTRY_USER: ${REGISTRY_USER}
-      #REGISTRY_PASS: ${REGISTRY_PASS}
+      REGISTRY_USER: ${REGISTRY_USER}
+      REGISTRY_PASS: ${REGISTRY_PASS}
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
 
     secrets:
