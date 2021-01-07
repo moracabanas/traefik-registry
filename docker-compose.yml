@@ -3,6 +3,10 @@ version: '3.3'
 secrets:
   USERS:
     file: ./.secrets/USERS.secret
+  REGISTRY_USER:
+    file: ./.secrets/REGISTRY_USER.secret
+  REGISTRY_PASS:
+    file: ./.secrets/REGISTRY_PASS.secret
 
 services: 
   registry:
@@ -39,7 +43,7 @@ services:
         - traefik.http.routers.${REGISTRY_NAME?variable not set}_registry-https.middlewares=${REGISTRY_NAME?variable not set}_registry-auth
         # https://stackoverflow.com/questions/49454278/how-to-use-a-private-registry-with-docker-swarm-and-traefik-in-docker
   ui:
-    image: jc21/registry-ui
+    image: maximaltest/registry-ui:test # TODO change to the original jc21/registry-ui if pull request gets approved
     depends_on: 
       - registry
     networks: 
@@ -48,12 +52,14 @@ services:
     environment: 
       REGISTRY_HOST: registry:5000
       REGISTRY_DOMAIN: ${DOMAIN?variable not set}
-      REGISTRY_USER: ${REGISTRY_USER}
-      REGISTRY_PASS: ${REGISTRY_PASS}
+      REGISTRY_USER_FILE: /run/secrets/REGISTRY_USER
+      REGISTRY_PASS_FILE: /run/secrets/REGISTRY_PASS
       REGISTRY_STORAGE_DELETE_ENABLED: "true"
 
     secrets:
       - USERS
+      - REGISTRY_USER
+      - REGISTRY_PASS
     deploy:
       restart_policy:
         condition: on-failure
