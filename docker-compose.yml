@@ -31,16 +31,16 @@ services:
         - traefik.enable=true
         - traefik.constraint-label=traefik-public
         - traefik.docker.network=traefik-public
-        - traefik.http.routers.${REGISTRY_NAME?variable not set}_registry-http.rule=Host(`${DOMAIN?variable not set}`)
-        - traefik.http.routers.${REGISTRY_NAME?variable not set}_registry-http.entrypoints=http
-        - traefik.http.routers.${REGISTRY_NAME?variable not set}_registry-http.middlewares=https-redirect
-        - traefik.http.routers.${REGISTRY_NAME?variable not set}_registry-https.entrypoints=https
-        - traefik.http.routers.${REGISTRY_NAME?variable not set}_registry-https.rule=Host(`${DOMAIN?variable not set}`)
-        - traefik.http.routers.${REGISTRY_NAME?variable not set}_registry-https.tls=true
-        - traefik.http.routers.${REGISTRY_NAME?variable not set}_registry-https.tls.certresolver=le
-        - traefik.http.services.${REGISTRY_NAME?variable not set}_registry.loadbalancer.server.port=5000
-        - traefik.http.middlewares.${REGISTRY_NAME?variable not set}_registry-auth.basicauth.usersfile=/run/secrets/USERS
-        - traefik.http.routers.${REGISTRY_NAME?variable not set}_registry-https.middlewares=${REGISTRY_NAME?variable not set}_registry-auth
+        - traefik.http.routers.${REGISTRY_NAME?variable not set}_v2-http.rule=Host(`${DOMAIN?variable not set}/v2/`)
+        - traefik.http.routers.${REGISTRY_NAME?variable not set}_v2-http.entrypoints=http
+        - traefik.http.routers.${REGISTRY_NAME?variable not set}_v2-http.middlewares=https-redirect
+        - traefik.http.routers.${REGISTRY_NAME?variable not set}_v2-https.entrypoints=https
+        - traefik.http.routers.${REGISTRY_NAME?variable not set}_v2-https.rule=Host(`${DOMAIN?variable not set}/v2/`)
+        - traefik.http.routers.${REGISTRY_NAME?variable not set}_v2-https.tls=true
+        - traefik.http.routers.${REGISTRY_NAME?variable not set}_v2-https.tls.certresolver=le
+        - traefik.http.services.${REGISTRY_NAME?variable not set}_v2.loadbalancer.server.port=5000
+        - traefik.http.middlewares.${REGISTRY_NAME?variable not set}_v2-auth.basicauth.usersfile=/run/secrets/USERS
+        - traefik.http.routers.${REGISTRY_NAME?variable not set}_v2-https.middlewares=${REGISTRY_NAME?variable not set}_v2-auth
         # https://stackoverflow.com/questions/49454278/how-to-use-a-private-registry-with-docker-swarm-and-traefik-in-docker
   ui:
     image: maximaltest/registry-ui:test # TODO change to the original jc21/registry-ui if pull request gets approved
@@ -70,11 +70,11 @@ services:
         - traefik.enable=true
         - traefik.constraint-label=traefik-public
         - traefik.docker.network=traefik-public
-        - traefik.http.routers.${REGISTRY_NAME?variable not set}_ui-http.rule=Host(`${DOMAIN_UI?variable not set}`)
+        - traefik.http.routers.${REGISTRY_NAME?variable not set}_ui-http.rule=Host(`${DOMAIN?variable not set}`)
         - traefik.http.routers.${REGISTRY_NAME?variable not set}_ui-http.entrypoints=http
         - traefik.http.routers.${REGISTRY_NAME?variable not set}_ui-http.middlewares=https-redirect
         - traefik.http.routers.${REGISTRY_NAME?variable not set}_ui-https.entrypoints=https
-        - traefik.http.routers.${REGISTRY_NAME?variable not set}_ui-https.rule=Host(`${DOMAIN_UI?variable not set}`)
+        - traefik.http.routers.${REGISTRY_NAME?variable not set}_ui-https.rule=Host(`${DOMAIN?variable not set}`)
         - traefik.http.routers.${REGISTRY_NAME?variable not set}_ui-https.tls=true
         - traefik.http.routers.${REGISTRY_NAME?variable not set}_ui-https.tls.certresolver=le
         - traefik.http.services.${REGISTRY_NAME?variable not set}_ui.loadbalancer.server.port=80
